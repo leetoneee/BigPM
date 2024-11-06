@@ -1,9 +1,9 @@
 'use client';
 
-import { ChevronRightIcon } from '@heroicons/react/24/solid';
 import React from 'react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
+import { SlashIcon } from '@heroicons/react/24/outline';
 
 const Breadcrumb = () => {
   const pathname = usePathname();
@@ -19,7 +19,7 @@ const Breadcrumb = () => {
   return (
     <div className="dark:bg-dark">
       <div className="container">
-        <div className="mb-8 w-full">
+        <div className="mb-3 w-full">
           <div className="shadow-1 dark:shadow-card bg-tg-bg dark:bg-dark-2 rounded-lg">
             <ul className="flex items-center">
               {/* Dashboard link */}
@@ -46,16 +46,16 @@ const Breadcrumb = () => {
                     {!isLast ? (
                       <Link
                         href={href}
-                        className="text-on-secondary hover:text-on-secondary/70 font-bold"
+                        className="text-on-secondary hover:text-on-secondary/70 font-bold text-xl"
                       >
                         {formatSegment(segment)}
                       </Link>
                     ) : (
-                      <span className="text-on-secondary font-bold">
+                      <span className="text-on-secondary font-bold text-xl">
                         {formatSegment(segment)}
                       </span>
                     )}
-                    {!isLast && <ChevronRightIcon className="size-5" />}
+                    {!isLast && <SlashIcon className="size-5" />}
                   </li>
                 );
               })}

@@ -4,9 +4,9 @@ import { BellIcon } from '@heroicons/react/24/outline';
 
 const Header = () => {
   return (
-    <header className="bg-primary flex h-16 shrink-0 items-center justify-between px-4 drop-shadow md:px-6">
+    <header className="bg-white flex h-16 shrink-0 items-center justify-between px-4 drop-shadow md:px-6">
       <div className="flex flex-row items-center gap-4">
-        <Image src="icons/logo.svg" alt="logo" width={50} height={50} />
+        <Image src="/icons/logo.svg" alt="logo" width={50} height={50} />
         <span className="text-on-primary text-lg font-semibold">BigPM</span>
       </div>
       <div className="flex flex-row gap-4 items-center">

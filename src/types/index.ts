@@ -2,7 +2,7 @@ import { ReactNode } from "react";
 
 export type SidebarItemProps = {
   label: string;
-  icon: ReactNode | null;
+  icon: ReactNode;
   path: string;
   active: boolean;
   isSidebarExpanded: boolean;
@@ -16,4 +16,11 @@ export type ButtonProps = {
   iconLeft?: ReactNode | null;
   iconRight?: ReactNode | null;
   onClick?: () => void;
+};
+
+export type TabButtonProps = {
+  name: string;
+  icon: ReactNode;
+  setActiveTab: (tabName: string) => void;
+  activeTab: string;
 };

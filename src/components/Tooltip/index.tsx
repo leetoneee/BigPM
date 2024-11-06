@@ -11,7 +11,7 @@ const TooltipItem = ({
     <div className="w-full sm:w-1/2 lg:w-1/4">
       <div className="mb-14">
         <div className="group relative inline-block">
-          <button className="bg-primary inline-flex rounded py-2 text-base font-semibold text-white">
+          <button className="bg-white inline-flex rounded py-2 text-base font-semibold text-white">
             {children}
           </button>
           <div

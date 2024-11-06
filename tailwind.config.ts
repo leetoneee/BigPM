@@ -1,10 +1,12 @@
 import type { Config } from 'tailwindcss';
+import {nextui} from "@nextui-org/react";
 
 const config: Config = {
   content: [
     './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
-    './src/app/**/*.{js,ts,jsx,tsx,mdx}'
+    './src/app/**/*.{js,ts,jsx,tsx,mdx}',
+    './node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}'
   ],
   theme: {
     extend: {
@@ -14,9 +16,9 @@ const config: Config = {
       }
     },
     colors: {
-      'primary': '#F9FAFB',
+      'white': '#F9FAFB',
       'on-primary': '#0E2040',
-      'secondary': '#F0F6FF',
+      'main-blue': '#F0F6FF',
       'on-secondary': '#0E2040',
       'container-focus': '#F0F6FF',
       'on-container-focus': '#5D7285',
@@ -29,6 +31,7 @@ const config: Config = {
       'outline-focus': '#2E3C63',
     }
   },
-  plugins: []
+  darkMode: "class",
+  plugins: [nextui()]
 };
 export default config;

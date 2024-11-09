@@ -18,7 +18,8 @@ const config: Config = {
     colors: {
       'white': '#F9FAFB',
       'on-primary': '#0E2040',
-      'main-blue': '#F0F6FF',
+      'second-blue': '#F0F6FF',
+      'main-blue': '#00AAFF',
       'on-secondary': '#0E2040',
       'container-focus': '#F0F6FF',
       'on-container-focus': '#5D7285',

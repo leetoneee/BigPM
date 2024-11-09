@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { ReactNode } from 'react';
 
 export type SidebarItemProps = {
   label: string;
@@ -6,7 +6,7 @@ export type SidebarItemProps = {
   path: string;
   active: boolean;
   isSidebarExpanded: boolean;
-}
+};
 
 export type ButtonProps = {
   content?: string;

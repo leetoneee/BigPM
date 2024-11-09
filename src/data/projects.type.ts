@@ -1,26 +1,18 @@
-type userType = {
+export const statusColorMap: Record<
+  'Completed' | 'In Progress' | 'Not Started' | 'On Hold',
+  'success' | 'warning' | 'default' | 'danger'
+> = {
+  'Completed': 'success',
+  'In Progress': 'warning',
+  'Not Started': 'default',
+  'On Hold': 'danger'
+};
+
+export type Project = {
   id: number;
   name: string;
-  role: string;
-  team: string;
   status: string;
-  age: string;
-  avatar: string;
-  email: string;
+  progress: number;
+  startDate: string;
+  endDate: string;
 };
-
-type columnsType = {
-  name: string;
-  uid: string;
-}
-
-// Define statusColorMap type based on keys and colors used in the map
-export const statusColorMap: Record<'active' | 'paused' | 'vacation', 'success' | 'danger' | 'warning'> = {
-  active: 'success',
-  paused: 'danger',
-  vacation: 'warning'
-};
-
-export type usersType = userType[];
-
-export type { userType, columnsType };

@@ -52,7 +52,7 @@ export const NavItems = () => {
       href: '/settings',
       icon: <Cog6ToothIcon className="size-6" />,
       active: isNavItemActive(pathname, '/settings'),
-      position: 'bottom'
+      position: 'top'
     }
   ];
 };

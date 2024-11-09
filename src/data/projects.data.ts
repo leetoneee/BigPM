@@ -1,3 +1,5 @@
+import { Project } from "./projects.type";
+
 const columns = [
   { name: '#', uid: 'id', sortable: true },
   { name: 'NAME', uid: 'name' },
@@ -15,7 +17,7 @@ const statusOptions = [
   {name: "Not Started", uid: "not-started"},
 ];
 
-const projects = [
+const projects: Project[] = [
   {
     id: 1,
     name: 'Project Apollo',

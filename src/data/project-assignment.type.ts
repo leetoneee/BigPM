@@ -1,8 +1,6 @@
-type Staff = {
+export type ProjectAssignee = {
   id: number;
   staffName: string;
-  phone: string;
-  hireDate: string; // Date in UTC format
   role: 'Senior' | 'Junior' | 'Internship' | 'Fresher';
   position:
     | 'Business Analyst'
@@ -14,5 +12,3 @@ type Staff = {
     | 'Product Owner';
   email: string;
 };
-
-export type { Staff };

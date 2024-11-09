@@ -55,7 +55,7 @@ const Projects = () => {
   const [onHoldProjects, setOnHoldProjects] = useState<number>(0);
   const [totalProjects, setTotalProjects] = useState<number>(0);
 
-  const [filterProjectName, setFilterPorjectName] = useState<string>('');
+  const [filterProjectName, setFilterProjectName] = useState<string>('');
   const hasSearchFilter = Boolean(filterProjectName);
   const [selectedStatus, setSelectedStatus] = useState<Selection>(
     new Set(['All'])
@@ -311,9 +311,11 @@ const Projects = () => {
   return (
     <main className="flex h-full flex-col items-center p-3 sm:items-start">
       <Breadcrumb />
-      <div className="mb-2 h-2 w-full border-b pt-2"></div>
+      <div className="mb-3 h-2 w-full border-b pt-2"></div>
       <div className="flex h-full w-full flex-col gap-6 rounded-xl bg-[#FFFFFF] p-6">
+        {/* Thống kê và search */}
         <div className="flex w-full flex-col gap-5 rounded-xl bg-[#F7F9FD] p-8 shadow-xl">
+          {/* Thống kê */}
           <div className="flex w-full flex-row gap-16">
             <Chip
               className="rounded-sm capitalize"
@@ -351,19 +353,23 @@ const Projects = () => {
               Total: <span className="text-2xl">{totalProjects}</span> projects
             </span>
           </div>
+          {/* Search/Filter */}
           <div className="flex w-full flex-row gap-16">
-            <div className="flex flex-col">
+            {/* Search Name*/}
+            <div className="flex flex-col gap-2">
               <span>Project name</span>
               <Input
                 className="bg-white"
+                variant="bordered"
                 size={'md'}
                 type=""
                 placeholder="Find your project name"
                 value={filterProjectName}
-                onChange={(e) => setFilterPorjectName(e.target.value)}
+                onChange={(e) => setFilterProjectName(e.target.value)}
               />
             </div>
-            <div className="flex flex-col">
+            {/* Filter Status */}
+            <div className="flex flex-col gap-2">
               <span>Status</span>
               <Dropdown>
                 <DropdownTrigger>
@@ -396,58 +402,66 @@ const Projects = () => {
                 </DropdownMenu>
               </Dropdown>
             </div>
-            <div className="flex flex-col">
+            {/* Filter Start date */}
+            <div className="flex flex-col gap-2">
               <span>Start date</span>
               <DateInput
                 key={'start-date'}
+                variant="bordered"
                 className="w-[210px]"
                 value={filterStartDate}
                 onChange={setFilterStartDate}
               />
             </div>
-            <div className="flex flex-col">
+            {/* Filter end date */}
+            <div className="flex flex-col gap-2">
               <span>End date</span>
               <DateInput
                 key={'end-date'}
+                variant="bordered"
                 className="w-[210px]"
                 value={filterEndDate}
                 onChange={setFilterEndDate}
               />
             </div>
             <Button
-              className="h-14 rounded-2xl bg-main-blue text-white"
-              startContent={<MagnifyingGlassIcon className="size-6 text-white" />}
+              className="h-14 rounded-2xl bg-main-blue text-white my-auto"
+              startContent={
+                <MagnifyingGlassIcon className="size-6 text-white" />
+              }
               size="sm"
             />
             <Button
               className="ml-auto h-14 rounded-2xl bg-main-blue text-white"
               startContent={<PlusIcon className="size-6 text-white" />}
-              size="sm"
-              onClick={()=>router.push('/projects/create')}
+              size="lg"
+              onClick={() => router.push('/projects/create')}
             >
               Create
             </Button>
           </div>
         </div>
-        <div className="h-full w-full bg-[#F7F9FD]">
+        {/* Table */}
+        <div className="h-[482px] shrink overflow-hidden rounded-xl shadow-xl">
           <Table
             aria-label="Example table with client side pagination"
-            className="h-full w-full rounded-xl shadow-xl"
+            className="h-full w-full"
             selectionMode="single"
-            color='#F7F9FD'
-            bottomContent={
-              <div className="flex w-full justify-center">
-                <Pagination
-                  isCompact
-                  showControls
-                  showShadow
-                  color='#00AAFF'
-                  page={page}
-                  total={pages}
-                  onChange={(page) => setPage(page)}
-                />
-              </div>
-            }
+            color="#F7F9FD"
+            shadow="none"
+            // bottomContent={
+            //   <div className="mb-auto flex w-full justify-center">
+            //     <Pagination
+            //       isCompact
+            //       showControls
+            //       showShadow
+            //       color="#00AAFF"
+            //       page={page}
+            //       total={pages}
+            //       onChange={(page) => setPage(page)}
+            //     />
+            //   </div>
+            // }
             sortDescriptor={sortDescriptor}
             onSortChange={setSortDescriptor}
           >
@@ -472,6 +486,18 @@ const Projects = () => {
               )}
             </TableBody>
           </Table>
+        </div>
+        {/* Pagiantion */}
+        <div className="mb-auto flex w-full justify-center">
+          <Pagination
+            isCompact
+            showControls
+            showShadow
+            color="#00AAFF"
+            page={page}
+            total={pages}
+            onChange={(page) => setPage(page)}
+          />
         </div>
       </div>
     </main>

@@ -245,6 +245,7 @@ const Projects = () => {
 
   const filteredItems = React.useMemo(() => {
     let filteredProjects = [...projects];
+    setPage(1);
 
     if (hasSearchFilter) {
       filteredProjects = filteredProjects.filter((project) =>
@@ -424,15 +425,17 @@ const Projects = () => {
                 onChange={setFilterEndDate}
               />
             </div>
+            <div className="h-full place-content-end">
+              <Button
+                className="mb-auto h-14 rounded-2xl bg-main-blue text-white shadow-md"
+                startContent={
+                  <MagnifyingGlassIcon className="size-6 text-white" />
+                }
+                size="sm"
+              />
+            </div>
             <Button
-              className="h-14 rounded-2xl bg-main-blue text-white my-auto"
-              startContent={
-                <MagnifyingGlassIcon className="size-6 text-white" />
-              }
-              size="sm"
-            />
-            <Button
-              className="ml-auto h-14 rounded-2xl bg-main-blue text-white"
+              className="my-auto ml-auto h-14 rounded-2xl bg-main-blue text-white shadow-md"
               startContent={<PlusIcon className="size-6 text-white" />}
               size="lg"
               onClick={() => router.push('/projects/create')}

@@ -4,19 +4,23 @@ import { useState } from 'react';
 import { Breadcrumb } from '@/components';
 import Image from 'next/image';
 import ProjectHeader from '../ProjectHeader';
-import Overview from '../Overview';
-import WBS from '../WBS';
-import Calendar from '../Calendar';
-import Gantt from '../Gantt';
-import Kanban from '../Kanban';
-import Progress from '../Progress';
+import Overview from '../Tab.Overview';
+import WBS from '../Tab.WBS';
+import Calendar from '../Tab.Calendar';
+import Gantt from '../Tab.Gantt';
+import Kanban from '../Tab.Kanban';
+import Progress from '../Tab.Progress';
+import { useParams } from 'next/navigation';
 
 type Props = {
   params: { id: string };
 };
 
-export default function Projects({ params }: Props) {
+export default function Projects() {
+  const params = useParams<{ id: string }>()
+
   const { id } = params;
+
   const [activeTab, setActiveTab] = useState('Overview');
   const [isModalNewTaskOpen, setIsModalNewTaskOpen] = useState(false);
 

@@ -3,8 +3,8 @@ import { ProjectAssignee } from './project-assignment.type';
 const columns = [
   { name: '#', uid: 'id', sortable: true },
   { name: 'MEMBER NAME', uid: 'staffName' },
-  { name: 'ROLE', uid: 'role' },
   { name: 'POSITION', uid: 'position' },
+  { name: 'ROLE', uid: 'role' },
   { name: 'EMAIL', uid: 'email' },
   { name: 'ACTIONS', uid: 'actions' }
 ];

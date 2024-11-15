@@ -15,4 +15,9 @@ export type Task = {
   status: 'Not Started' | 'In Progress' | 'Completed' | 'On Hold';
   progress: number;
   order: number;
+  assignees: {
+    id: number;
+    staffName: string;
+    avatar: string;
+  }[]
 };

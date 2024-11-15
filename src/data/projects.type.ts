@@ -15,4 +15,6 @@ export type Project = {
   progress: number;
   startDate: string;
   endDate: string;
+  description: string;
+  objectives: string;
 };

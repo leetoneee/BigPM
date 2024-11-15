@@ -57,6 +57,8 @@ export default function Settings() {
   const [projectName, setProjectName] = useState<string>('');
   const [startDate, setStartDate] = useState<CalendarDate>();
   const [endDate, setEndDate] = useState<CalendarDate>();
+  const [description, setDescription] = useState<string>('');
+  const [objecttives, setObjecttives] = useState<string>('');
   const [files, setFiles] = useState<File[]>([]);
 
   const [teamMembers, setTeamMembers] = useState<ProjectAssignee[]>([]);
@@ -366,6 +368,8 @@ export default function Settings() {
               size="lg"
               placeholder="Enter your description"
               className="col-span-12 mb-6 md:col-span-6 md:mb-0"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
             />
           </div>
           {/* Objectives */}
@@ -378,6 +382,8 @@ export default function Settings() {
               size="lg"
               placeholder="Enter your objectives"
               className="col-span-12 mb-6 md:col-span-6 md:mb-0"
+              value={objecttives}
+              onChange={(e) => setObjecttives(e.target.value)}
             />
           </div>
         </div>

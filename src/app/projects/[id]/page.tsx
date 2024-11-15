@@ -37,7 +37,7 @@ export default function Projects() {
           <Overview id={id} setIsModalNewTaskOpen={setIsModalNewTaskOpen} />
         )}
         {activeTab === 'WBS' && (
-          <WBS id={id} setIsModalNewTaskOpen={setIsModalNewTaskOpen} />
+          <WBS id={Number(id)} setIsModalNewTaskOpen={setIsModalNewTaskOpen} />
         )}
         {activeTab === 'Kanban' && (
           <Kanban id={id} setIsModalNewTaskOpen={setIsModalNewTaskOpen} />

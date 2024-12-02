@@ -17,7 +17,7 @@ export type Task = {
   order: number;
   assignees: {
     id: number;
-    staffName: string;
-    avatar: string;
+    assigneeName: string;
+    asigneeAvatar: string;
   }[]
 };

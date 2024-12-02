@@ -17,3 +17,19 @@ export const getTaskGroupsByProjectId = (projectId: number): TasksInGroup[] => {
       tasks: tasks.filter((task) => task.taskGroupId === taskGroup.id)
     }));
 };
+
+export const getAllTaskGroups = (): TaskGroup[] => {
+  return taskGroups;
+};
+
+export const getCategoriesByProjectId = (projectId: number) => {
+  return taskGroups.filter((category) => (category.projectId === projectId));
+};
+
+export const getCategoryById = (categoryId: number): TaskGroup => {
+  const category = taskGroups.find((category) => category.id === categoryId);
+  if (!category) {
+    throw new Error(`Category with id ${categoryId} not found`);
+  }
+  return category;
+};

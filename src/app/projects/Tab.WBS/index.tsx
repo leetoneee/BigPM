@@ -10,7 +10,7 @@ import {
   DropdownMenu,
   DropdownTrigger,
   Input,
-  Selection
+  Selection,
 } from '@nextui-org/react';
 import { Reorder } from 'framer-motion';
 import React, {
@@ -33,11 +33,11 @@ type Props = {
 
 const WBS = ({ id, setIsModalNewTaskOpen }: Props) => {
   const [groupTasks, setGroupTasks] = useState<TasksInGroup[]>([]);
-  const [notStartedProjects, setNotStartedProjects] = useState<number>(0);
-  const [inProgressProjects, setInProgressProjects] = useState<number>(0);
-  const [completedProjects, setCompletedProjects] = useState<number>(0);
-  const [onHoldProjects, setOnHoldProjects] = useState<number>(0);
-  const [totalProjects, setTotalProjects] = useState<number>(0);
+  const [notStartedTasks, setNotStartedTasks] = useState<number>(0);
+  const [inProgressTasks, setInProgressTasks] = useState<number>(0);
+  const [completedTasks, setCompletedTasks] = useState<number>(0);
+  const [onHoldTasks, setOnHoldTasks] = useState<number>(0);
+  const [totalTasks, setTotalTasks] = useState<number>(0);
 
   const groupRefs = useRef<{ [key: number]: HTMLDivElement | null }>({});
 
@@ -52,11 +52,49 @@ const WBS = ({ id, setIsModalNewTaskOpen }: Props) => {
   const [filterStartDate, setFilterStartDate] = useState<CalendarDate>();
   const [filterEndDate, setFilterEndDate] = useState<CalendarDate>();
 
+  // Load data
   useEffect(() => {
     const data = getTaskGroupsByProjectId(id);
     console.log('🚀 ~ useEffect ~ data:', data);
     setGroupTasks(data);
   }, [id]);
+
+  useEffect(() => {
+    const countNotStartedTasks = groupTasks.reduce((total, group) => {
+      const numOfTasks = group.tasks.filter(
+        (task) => task.status === 'Not Started'
+      ).length;
+      return total + numOfTasks;
+    }, 0);
+    const countCompletedTasks = groupTasks.reduce((total, group) => {
+      const numOfTasks = group.tasks.filter(
+        (task) => task.status === 'Completed'
+      ).length;
+      return total + numOfTasks;
+    }, 0);
+    const countOnHoldTasks = groupTasks.reduce((total, group) => {
+      const numOfTasks = group.tasks.filter(
+        (task) => task.status === 'On Hold'
+      ).length;
+      return total + numOfTasks;
+    }, 0);
+    const countInProgressTasks = groupTasks.reduce((total, group) => {
+      const numOfTasks = group.tasks.filter(
+        (task) => task.status === 'In Progress'
+      ).length;
+      return total + numOfTasks;
+    }, 0);
+    const countTotalTasks = groupTasks.reduce((total, group) => {
+      const numOfTasks = group.tasks.length;
+      return total + numOfTasks;
+    }, 0);
+
+    setCompletedTasks(countCompletedTasks);
+    setInProgressTasks(countInProgressTasks);
+    setOnHoldTasks(countOnHoldTasks);
+    setNotStartedTasks(countNotStartedTasks);
+    setTotalTasks(countTotalTasks);
+  }, [groupTasks]);
 
   const handleTaskMove = (task: Task, targetGroupId: number) => {
     setGroupTasks((prevGroups) => {
@@ -142,7 +180,7 @@ const WBS = ({ id, setIsModalNewTaskOpen }: Props) => {
                 size="lg"
                 variant="flat"
               >
-                Time spent: {onHoldProjects}
+                Time spent: {onHoldTasks}
               </Chip>
               <Chip
                 className="rounded-sm capitalize"
@@ -150,10 +188,10 @@ const WBS = ({ id, setIsModalNewTaskOpen }: Props) => {
                 size="lg"
                 variant="flat"
               >
-                Time Remaining: {inProgressProjects}
+                Time Remaining: {inProgressTasks}
               </Chip>
               <span>
-                Total: <span className="text-2xl">{totalProjects}</span> days
+                Total: <span className="text-2xl">{totalTasks}</span> days
               </span>
             </div>
           </div>
@@ -169,7 +207,7 @@ const WBS = ({ id, setIsModalNewTaskOpen }: Props) => {
                 size="lg"
                 variant="flat"
               >
-                Planned: {onHoldProjects}%
+                Planned: {onHoldTasks}%
               </Chip>
               <Chip
                 className="rounded-sm capitalize"
@@ -177,7 +215,7 @@ const WBS = ({ id, setIsModalNewTaskOpen }: Props) => {
                 size="lg"
                 variant="flat"
               >
-                Actual: {inProgressProjects}%
+                Actual: {inProgressTasks}%
               </Chip>
             </div>
           </div>
@@ -192,7 +230,7 @@ const WBS = ({ id, setIsModalNewTaskOpen }: Props) => {
               size="lg"
               variant="flat"
             >
-              On Hold: {onHoldProjects}
+              On Hold: {onHoldTasks}
             </Chip>
             <Chip
               className="rounded-sm capitalize"
@@ -200,7 +238,7 @@ const WBS = ({ id, setIsModalNewTaskOpen }: Props) => {
               size="lg"
               variant="flat"
             >
-              In Progress: {inProgressProjects}
+              In Progress: {inProgressTasks}
             </Chip>
             <Chip
               className="rounded-sm capitalize"
@@ -208,7 +246,7 @@ const WBS = ({ id, setIsModalNewTaskOpen }: Props) => {
               size="lg"
               variant="flat"
             >
-              Completed: {completedProjects}
+              Completed: {completedTasks}
             </Chip>
             <Chip
               className="rounded-sm capitalize"
@@ -216,17 +254,17 @@ const WBS = ({ id, setIsModalNewTaskOpen }: Props) => {
               size="lg"
               variant="flat"
             >
-              Not Started: {notStartedProjects}
+              Not Started: {notStartedTasks}
             </Chip>
             <span>
-              Total: <span className="text-2xl">{totalProjects}</span> tasks
+              Total: <span className="text-2xl">{totalTasks}</span> tasks
             </span>
           </div>
         </div>
         {/* Assign Tasks */}
         <div className="flex w-full flex-col gap-6 rounded-xl bg-white p-5 shadow-xl">
           {/* Search/Filter */}
-          <div className="flex w-full flex-row gap-16 rounded-xl bg-[#F4F7FC]/75 px-8 py-4">
+          <div className="flex w-full flex-row gap-10 rounded-xl bg-[#F4F7FC]/75 px-8 py-4">
             {/* Filter Status */}
             <div className="flex flex-col gap-2">
               <span>Status</span>
@@ -243,6 +281,7 @@ const WBS = ({ id, setIsModalNewTaskOpen }: Props) => {
                   variant="flat"
                   selectionMode="single"
                   selectedKeys={selectedStatus}
+                  disallowEmptySelection
                   onSelectionChange={setSelectedStatus}
                 >
                   <DropdownItem key="All">All</DropdownItem>
@@ -290,22 +329,18 @@ const WBS = ({ id, setIsModalNewTaskOpen }: Props) => {
               }
               size="sm"
             />
-            <Button
-              className="my-auto ml-auto h-14 rounded-2xl bg-main-blue text-white shadow-md"
-              startContent={<PlusIcon className="size-6 text-white" />}
-              size="lg"
+            <button
+              className="my-auto ml-auto flex h-14 flex-row items-center justify-center rounded-2xl bg-main-blue px-2 text-white shadow-md"
               // onClick={() => router.push('/projects/create')}
             >
-              Add Category
-            </Button>
-            <Button
-              className="my-auto ml-auto h-14 rounded-2xl bg-main-blue text-white shadow-md"
-              startContent={<PlusIcon className="size-6 text-white" />}
-              size="lg"
+              <PlusIcon className="size-6 text-white" /> Add Category
+            </button>
+            <button
+              className="my-auto ml-auto flex h-14 flex-row items-center justify-center rounded-2xl bg-main-blue px-2 text-white shadow-md"
               // onClick={() => router.push('/projects/create')}
             >
-              Add Task
-            </Button>
+              <PlusIcon className="size-6 text-white" /> Add Task
+            </button>
           </div>
           <div className="flex w-full flex-col gap-2 rounded-xl bg-[#F4F7FC]/75">
             {/* Header Row */}

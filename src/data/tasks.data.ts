@@ -21,13 +21,13 @@ export const tasks: Task[] = [
     assignees: [
       {
         id: 1,
-        staffName: 'John Doe',
-        avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026024d'
+        assigneeName: 'John Doe',
+        asigneeAvatar: 'https://i.pravatar.cc/150?u=a042581f4e29026024d'
       },
       {
         id: 2,
-        staffName: 'Jane Smith',
-        avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026704d'
+        assigneeName: 'Jane Smith',
+        asigneeAvatar: 'https://i.pravatar.cc/150?u=a042581f4e29026704d'
       }
     ]
   },
@@ -51,13 +51,13 @@ export const tasks: Task[] = [
     assignees: [
       {
         id: 3,
-        staffName: 'Alice Brown',
-        avatar: 'https://i.pravatar.cc/150?u=a04258114e29026702d'
+        assigneeName: 'Alice Brown',
+        asigneeAvatar: 'https://i.pravatar.cc/150?u=a04258114e29026702d'
       },
       {
         id: 4,
-        staffName: 'Bob Johnson',
-        avatar: 'https://i.pravatar.cc/150?u=a048581f4e29026701d'
+        assigneeName: 'Bob Johnson',
+        asigneeAvatar: 'https://i.pravatar.cc/150?u=a048581f4e29026701d'
       }
     ]
   },
@@ -81,8 +81,8 @@ export const tasks: Task[] = [
     assignees: [
       {
         id: 5,
-        staffName: 'Charlie Green',
-        avatar: 'https://i.pravatar.cc/150?u=a092581d4ef9026700d'
+        assigneeName: 'Charlie Green',
+        asigneeAvatar: 'https://i.pravatar.cc/150?u=a092581d4ef9026700d'
       }
     ]
   },
@@ -106,13 +106,13 @@ export const tasks: Task[] = [
     assignees: [
       {
         id: 6,
-        staffName: 'David Lee',
-        avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026024d'
+        assigneeName: 'David Lee',
+        asigneeAvatar: 'https://i.pravatar.cc/150?u=a042581f4e29026024d'
       },
       {
         id: 7,
-        staffName: 'Emma White',
-        avatar: 'https://i.pravatar.cc/150?u=a042581f4e29027007d'
+        assigneeName: 'Emma White',
+        asigneeAvatar: 'https://i.pravatar.cc/150?u=a042581f4e29027007d'
       }
     ]
   },
@@ -136,9 +136,17 @@ export const tasks: Task[] = [
     assignees: [
       {
         id: 8,
-        staffName: 'Fiona Gray',
-        avatar: 'https://i.pravatar.cc/150?img=4'
+        assigneeName: 'Fiona Gray',
+        asigneeAvatar: 'https://i.pravatar.cc/150?img=4'
       }
     ]
   }
 ];
+
+export const getTaskById = (taskId: number): Task => {
+  const task = tasks.find((task) => task.id === taskId);
+  if (!task) {
+    throw new Error(`Task with id ${taskId} not found`);
+  }
+  return task;
+};

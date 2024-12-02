@@ -1,15 +1,30 @@
 import { Task } from '@/data/tasks.type';
 import { formatDate } from '@/helpers/formatDate';
-import { EllipsisVerticalIcon } from '@heroicons/react/24/outline';
-import { Chip, Image } from '@nextui-org/react';
+import {
+  EllipsisVerticalIcon,
+  EyeIcon,
+  PlusIcon,
+  TrashIcon
+} from '@heroicons/react/24/outline';
+import {
+  Chip,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
+  Image,
+  useDisclosure
+} from '@nextui-org/react';
 // import Image from 'next/image';
 import React, { ReactNode, useCallback, useState } from 'react';
+import ViewTaskModal from './ViewTaskModal.view';
 
 type Props = {
   data: Task;
 };
 
 const RenderTask = ({ data }: Props) => {
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [task, setTask] = useState<Task>(data);
 
   const renderChip = useCallback((content: string): ReactNode => {
@@ -68,7 +83,26 @@ const RenderTask = ({ data }: Props) => {
           {task.name}
         </span>
         <div className="h-[72px] place-content-center">
-          <EllipsisVerticalIcon className="m-2 size-6" />
+          <Dropdown>
+            <DropdownTrigger>
+              <EllipsisVerticalIcon className="m-2 size-6 rounded-md hover:cursor-pointer hover:bg-on-container-focus/10 hover:brightness-110" />
+            </DropdownTrigger>
+            <DropdownMenu variant="solid" aria-label="Dropdown menu with icons">
+              <DropdownItem
+                key="new"
+                startContent={<EyeIcon className={'size-6 text-primary'} />}
+                onClick={onOpen}
+              >
+                View
+              </DropdownItem>
+              <DropdownItem
+                key="copy"
+                startContent={<TrashIcon className={'size-6 text-danger'} />}
+              >
+                Delete
+              </DropdownItem>
+            </DropdownMenu>
+          </Dropdown>
         </div>
       </div>
       <div className="flex basis-[12%] flex-row items-center justify-center py-4">
@@ -93,16 +127,23 @@ const RenderTask = ({ data }: Props) => {
             })
           : ''}
       </div>
-      <div className="flex basis-[12%] flex-col items-start justify-center py-4 gap-2">
+      <div className="flex basis-[12%] flex-col items-start justify-center gap-2 py-4">
         {task.assignees.map((assignee) => {
           return (
             <div key={assignee.id} className="flex flex-row gap-2">
-              <Image alt="avt" src={assignee.avatar} width={24} height={24} />
-              <span className="text-sm font-normal">{assignee.staffName}</span>
+              <Image alt="avt" src={assignee.asigneeAvatar} width={24} height={24} />
+              <span className="text-sm font-normal">{assignee.assigneeName}</span>
             </div>
           );
         })}
       </div>
+      <ViewTaskModal
+        key={isOpen ? `${task.id}` : null}
+        isOpen={isOpen}
+        onOpen={onOpen}
+        onOpenChange={onOpenChange}
+        taskId={task.id}
+      />
     </div>
   );
 };

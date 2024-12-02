@@ -416,7 +416,7 @@ const Overview = ({ id, setIsModalNewTaskOpen }: Props) => {
             <span className="text-2xl font-semibold text-on-primary">
               Attached Files
             </span>
-            <button className="rounded-[10px] bg-main-blue p-1 text-white">
+            <button className="rounded-[10px] bg-main-blue p-1 text-white hover:brightness-110">
               <PlusIcon className="size-7 text-white shadow-md" />
             </button>
           </div>

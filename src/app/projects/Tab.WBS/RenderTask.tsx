@@ -18,6 +18,8 @@ import {
 // import Image from 'next/image';
 import React, { ReactNode, useCallback, useState } from 'react';
 import ViewTaskModal from './ViewTaskModal.view';
+import DeleteTaskModal from './Modal.Task/DeleteTask.modal';
+import { toast } from 'react-toastify';
 
 type Props = {
   data: Task;
@@ -25,6 +27,13 @@ type Props = {
 
 const RenderTask = ({ data }: Props) => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  //!  CONTROL Delete modal
+  const {
+    isOpen: isOpenD,
+    onOpen: onOpenD,
+    onOpenChange: onOpenChangeD,
+    onClose: onCloseD
+  } = useDisclosure();
   const [task, setTask] = useState<Task>(data);
 
   const renderChip = useCallback((content: string): ReactNode => {
@@ -76,6 +85,10 @@ const RenderTask = ({ data }: Props) => {
     }
   }, []);
 
+  const handleDeleted = () => {
+    toast.success('Task has been deleted successfully');
+  };
+
   return (
     <div className="flex h-[72px] flex-row bg-white hover:bg-[#F7F9FD]/10">
       <div className="flex basis-[40%] flex-row items-center justify-between py-4">
@@ -98,6 +111,7 @@ const RenderTask = ({ data }: Props) => {
               <DropdownItem
                 key="copy"
                 startContent={<TrashIcon className={'size-6 text-danger'} />}
+                onClick={onOpenD}
               >
                 Delete
               </DropdownItem>
@@ -131,8 +145,15 @@ const RenderTask = ({ data }: Props) => {
         {task.assignees.map((assignee) => {
           return (
             <div key={assignee.id} className="flex flex-row gap-2">
-              <Image alt="avt" src={assignee.asigneeAvatar} width={24} height={24} />
-              <span className="text-sm font-normal">{assignee.assigneeName}</span>
+              <Image
+                alt="avt"
+                src={assignee.asigneeAvatar}
+                width={24}
+                height={24}
+              />
+              <span className="text-sm font-normal">
+                {assignee.assigneeName}
+              </span>
             </div>
           );
         })}
@@ -144,6 +165,18 @@ const RenderTask = ({ data }: Props) => {
         onOpenChange={onOpenChange}
         taskId={task.id}
       />
+      {/* Delete Task Modal */}
+      {isOpenD && (
+        <DeleteTaskModal
+          isOpen={isOpenD}
+          onOpen={onOpenD}
+          onClose={onCloseD}
+          onOpenChange={onOpenChangeD}
+          taskId={task.id}
+          taskTitle={task.name}
+          onDeleted={handleDeleted}
+        />
+      )}
     </div>
   );
 };

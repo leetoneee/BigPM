@@ -2,7 +2,8 @@ import type { Metadata } from 'next';
 import { Poppins } from 'next/font/google';
 import '../styles/globals.css';
 import { Header, Sidebar } from '@/components';
-import { NUIProviders } from '@/providers';
+import { NUIProviders, ToastProvider } from '@/providers';
+import AppProvider from '@/providers/AppProvider';
 
 const poppins = Poppins({ weight: ['400', '700'], subsets: ['latin'] });
 
@@ -20,19 +21,23 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${poppins.className} no-scrollbar antialiased`}>
-        <NUIProviders>
-          <Header />
-          <div className="mt-0.5 flex">
-            <Sidebar />
-            <div className="w-full overflow-x-auto bg-second-blue">
-              <div className="w-full overflow-auto sm:h-[calc(99vh-60px)]">
-                <div className="h-[calc(100vh - 120px)] relative mx-auto flex h-full w-full overflow-auto overflow-y-auto">
-                  <div className="h-full w-full">{children}</div>
+        <ToastProvider>
+          <NUIProviders>
+            <AppProvider>
+              <Header />
+              <div className="mt-0.5 flex">
+                <Sidebar />
+                <div className="w-full overflow-x-auto bg-second-blue">
+                  <div className="w-full overflow-auto sm:h-[calc(99vh-60px)]">
+                    <div className="h-[calc(100vh - 120px)] relative mx-auto flex h-full w-full overflow-auto overflow-y-auto">
+                      <div className="h-full w-full">{children}</div>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-          </div>
-        </NUIProviders>
+            </AppProvider>
+          </NUIProviders>
+        </ToastProvider>
       </body>
     </html>
   );

@@ -10,12 +10,13 @@ import {
   DropdownMenu,
   DropdownTrigger,
   Input,
-  Selection,
+  Selection
 } from '@nextui-org/react';
 import { Reorder } from 'framer-motion';
 import React, {
   ReactNode,
   useCallback,
+  useContext,
   useEffect,
   useRef,
   useState
@@ -25,14 +26,23 @@ import { isTasksInGroup } from '@/helpers/isTasksInGroup';
 import RenderTask from './RenderTask';
 import { Task } from '@/data/tasks.type';
 import { MagnifyingGlassIcon, PlusIcon } from '@heroicons/react/24/outline';
+import { AppContext } from '@/contexts';
 
 type Props = {
   id: number;
   setIsModalNewTaskOpen: (isOpen: boolean) => void;
 };
 
+type GroupTasksType = {
+  groupTasks: TasksInGroup[];
+  setGroupTasks: React.Dispatch<React.SetStateAction<TasksInGroup[]>>;
+};
+
 const WBS = ({ id, setIsModalNewTaskOpen }: Props) => {
-  const [groupTasks, setGroupTasks] = useState<TasksInGroup[]>([]);
+  const { groupTasks, setGroupTasks } = useContext(
+    AppContext
+  ) as GroupTasksType;
+
   const [notStartedTasks, setNotStartedTasks] = useState<number>(0);
   const [inProgressTasks, setInProgressTasks] = useState<number>(0);
   const [completedTasks, setCompletedTasks] = useState<number>(0);

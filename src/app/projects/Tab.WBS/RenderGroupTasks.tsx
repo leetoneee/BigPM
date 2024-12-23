@@ -98,7 +98,7 @@ const RenderGroupTasks = ({ data, groups, groupRefs, onTaskMove }: Props) => {
 
       <div
         ref={contentRef}
-        className="overflow-hidden transition-all duration-300 ease-in-out"
+        className={`overflow-hidden transition-all duration-300 ease-in-out ${tasks.length > 0 ? "" : expanded ? "min-h-20": "min-h-0"}`}
         style={{
           maxHeight: expanded ? `${contentRef.current?.scrollHeight}px` : '0px'
         }}

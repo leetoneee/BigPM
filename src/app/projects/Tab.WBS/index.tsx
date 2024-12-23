@@ -10,7 +10,8 @@ import {
   DropdownMenu,
   DropdownTrigger,
   Input,
-  Selection
+  Selection,
+  useDisclosure
 } from '@nextui-org/react';
 import { Reorder } from 'framer-motion';
 import React, {
@@ -27,6 +28,9 @@ import RenderTask from './RenderTask';
 import { Task } from '@/data/tasks.type';
 import { MagnifyingGlassIcon, PlusIcon } from '@heroicons/react/24/outline';
 import { AppContext } from '@/contexts';
+import AddCategoryModal from './Modal.Category/AddCategory.modal';
+import { toast } from 'react-toastify';
+import AddTaskModal from './Modal.Task/AddTaskModal.modal';
 
 type Props = {
   id: number;
@@ -42,6 +46,20 @@ const WBS = ({ id, setIsModalNewTaskOpen }: Props) => {
   const { groupTasks, setGroupTasks } = useContext(
     AppContext
   ) as GroupTasksType;
+  //! CONTROL Add Category modal
+  const {
+    isOpen: isOpenC,
+    onOpen: onOpenC,
+    onOpenChange: onOpenChangeC,
+    onClose: onCloseC
+  } = useDisclosure();
+  //! CONTROL Add Task modal
+  const {
+    isOpen: isOpenT,
+    onOpen: onOpenT,
+    onOpenChange: onOpenChangeT,
+    onClose: onCloseT
+  } = useDisclosure();
 
   const [notStartedTasks, setNotStartedTasks] = useState<number>(0);
   const [inProgressTasks, setInProgressTasks] = useState<number>(0);
@@ -174,6 +192,10 @@ const WBS = ({ id, setIsModalNewTaskOpen }: Props) => {
         );
     }
   }, []);
+
+  const handleCreated = () => {
+    toast.success('Task has been deleted successfully');
+  };
 
   return (
     <main className="flex h-full flex-col items-center p-3 sm:items-start">
@@ -341,13 +363,13 @@ const WBS = ({ id, setIsModalNewTaskOpen }: Props) => {
             />
             <button
               className="my-auto ml-auto flex h-14 flex-row items-center justify-center rounded-2xl bg-main-blue px-2 text-white shadow-md"
-              // onClick={() => router.push('/projects/create')}
+              onClick={onOpenC}
             >
               <PlusIcon className="size-6 text-white" /> Add Category
             </button>
             <button
               className="my-auto ml-auto flex h-14 flex-row items-center justify-center rounded-2xl bg-main-blue px-2 text-white shadow-md"
-              // onClick={() => router.push('/projects/create')}
+              onClick={onOpenT}
             >
               <PlusIcon className="size-6 text-white" /> Add Task
             </button>
@@ -390,6 +412,20 @@ const WBS = ({ id, setIsModalNewTaskOpen }: Props) => {
           </div>
         </div>
       </div>
+      <AddCategoryModal
+        isOpen={isOpenC}
+        onOpenChange={onOpenChangeC}
+        onClose={onCloseC}
+        onOpen={onOpenC}
+        onCreated={handleCreated}
+      />
+      <AddTaskModal
+        isOpen={isOpenT}
+        onOpenChange={onOpenChangeT}
+        onClose={onCloseT}
+        onOpen={onOpenT}
+        onCreated={handleCreated}
+      />
     </main>
   );
 };

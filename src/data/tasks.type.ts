@@ -1,3 +1,6 @@
+import { Comment } from "./comments.type";
+import { File } from "./files.type";
+
 export type Task = {
   id: number;
   projectId: number;
@@ -20,4 +23,6 @@ export type Task = {
     assigneeName: string;
     asigneeAvatar: string;
   }[]
+  files: File[];
+  comments: Comment[];
 };

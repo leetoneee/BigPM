@@ -14,7 +14,6 @@ import { Button } from '@nextui-org/react';
 import { toast } from 'react-toastify';
 import { TasksInGroup } from '@/data/task-group.type';
 import { AppContext } from '@/contexts';
-import { removeTask } from '@/helpers/removeTask';
 import { removeCategory } from '@/helpers/removeCategory';
 
 type Props = {

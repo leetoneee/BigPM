@@ -11,7 +11,6 @@ import {
   getCategoryById
 } from '@/data/task-group.data';
 import { TaskGroup, TasksInGroup } from '@/data/task-group.type';
-import { getTaskById } from '@/data/tasks.data';
 import { Task } from '@/data/tasks.type';
 import {
   DocumentTextIcon,
@@ -40,14 +39,16 @@ import {
 } from '@nextui-org/react';
 import React, { useContext, useEffect, useState } from 'react';
 import { AppContext } from '@/contexts';
+import { toast } from 'react-toastify';
 import { getCategoryList } from '@/helpers/getCategoryList';
-import { findTaskInGroupTasks } from '@/helpers/findTaskInGroupTasks';
+import { addTask } from '@/helpers/addTask';
 
 type Props = {
   isOpen: boolean;
   onOpen: () => void;
   onOpenChange: () => void;
-  taskId: number;
+  onClose: () => void;
+  onCreated?: () => void; // Callback báo cho parent biết đã tạo xong
 };
 
 type GroupTasksType = {
@@ -55,13 +56,17 @@ type GroupTasksType = {
   setGroupTasks: React.Dispatch<React.SetStateAction<TasksInGroup[]>>;
 };
 
-const ViewTaskModal = ({ isOpen, onOpen, onOpenChange, taskId }: Props) => {
+const AddTaskModal = ({
+  isOpen,
+  onOpen,
+  onOpenChange,
+  onClose,
+  onCreated
+}: Props) => {
   const { groupTasks, setGroupTasks } = useContext(
     AppContext
   ) as GroupTasksType;
 
-  const handleSave = () => {};
-  const handleClose = () => {};
   const [categories, setCategories] = useState<TaskGroup[]>([]);
 
   const [task, setTask] = useState<Task>();
@@ -73,7 +78,7 @@ const ViewTaskModal = ({ isOpen, onOpen, onOpenChange, taskId }: Props) => {
   const [lateFinish, setLateFinish] = useState<string>('');
   const [startDate, setStartDate] = useState<string>('');
   const [endDate, setEndDate] = useState<string>('');
-  const [progress, setProgress] = useState<string>('');
+  const [progress, setProgress] = useState<string>('0');
   const [completeTime, setCompleteTime] = useState<string>('');
   const [description, setDescription] = useState<string>('');
   const [selectedStatus, setSelectedStatus] = useState<Selection>(
@@ -88,6 +93,7 @@ const ViewTaskModal = ({ isOpen, onOpen, onOpenChange, taskId }: Props) => {
     () => Array.from(category).join(', ').replaceAll('_', ' '),
     [category]
   );
+
   const [assignees, setAssignees] = useState<
     {
       id: number;
@@ -98,6 +104,12 @@ const ViewTaskModal = ({ isOpen, onOpen, onOpenChange, taskId }: Props) => {
   const [files, setFiles] = useState<File[]>([]);
   const [comments, setComments] = useState<Comment[]>([]);
   const [commentInput, setCommentInput] = useState<string>('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errors, setErrors] = useState<{
+    taskName: string;
+  }>({
+    taskName: ''
+  });
 
   useEffect(() => {
     if (groupTasks.length > 0) {
@@ -107,63 +119,118 @@ const ViewTaskModal = ({ isOpen, onOpen, onOpenChange, taskId }: Props) => {
     }
   }, [groupTasks]);
 
-  useEffect(() => {
-    const data = findTaskInGroupTasks(groupTasks, taskId);
-    if (data) setTask(data);
-  }, [taskId]);
+  // useEffect(() => {
+  //   setFiles(filesData);
+  // }, [filesData]);
 
-  useEffect(() => {
-    setFiles(filesData);
-  }, [filesData]);
+  // useEffect(() => {
+  //   setComments(getCommentsByTaskId(1));
+  // }, []);
 
-  useEffect(() => {
-    setComments(getCommentsByTaskId(taskId));
-  }, [taskId]);
+  // useEffect(() => {
+  //   if (task) {
+  //     setTaskName(task.name);
+  //     const categoryName = getCategoryById(task.taskGroupId).name;
+  //     console.log('🚀 ~ useEffect ~ categoryName:', categoryName);
+  //     setCategory(new Set([categoryName]));
+  //     setEarlyStart(new Date(task.earlyStart).toISOString().split('T')[0]);
+  //     setEarlyFinish(new Date(task.earlyFinish).toISOString().split('T')[0]);
+  //     setLateStart(new Date(task.lateStart).toISOString().split('T')[0]);
+  //     setLateFinish(new Date(task.lateFinish).toISOString().split('T')[0]);
+  //     setStartDate(new Date(task.startDate).toISOString().split('T')[0]);
+  //     if (task.completionDate)
+  //       setEndDate(new Date(task.completionDate).toISOString().split('T')[0]);
+  //     if (task.completionDate && task.startDate) {
+  //       const completion = new Date(task.completionDate);
+  //       const start = new Date(task.startDate);
+  //       const differenceInMs = completion.getTime() - start.getTime();
+  //       const completeTime = Math.ceil(differenceInMs / (1000 * 60 * 60 * 24));
+  //       setCompleteTime(completeTime.toString());
+  //     }
+  //     setProgress(task.progress.toString());
+  //     setDescription(task.description);
+  //     setAssignees(task.assignees);
+  //   }
+  // }, [task]);
+  const renderError = (field: keyof typeof errors) =>
+    errors[field] && (
+      <span className="absolute bottom-[-20px] left-2 h-4 min-w-max text-sm text-danger">
+        {errors[field]}
+      </span>
+    );
 
-  useEffect(() => {
-    if (task) {
-      setTaskName(task.name);
+  const validateInputs = () => {
+    const newErrors = { ...errors };
 
-      const category = getCategoryById(task.taskGroupId);
-      if (category) {
-        setCategory(new Set([category.name]));
+    newErrors.taskName = taskName.trim() === '' ? 'Task name is required' : '';
+
+    setErrors(newErrors);
+
+    return Object.values(newErrors).every((error) => error === '');
+  };
+
+  const handleSubmit = async () => {
+    if (validateInputs()) {
+      // Handle form submission logic here
+
+      try {
+        setIsSubmitting(true); // Bắt đầu gửi yêu cầu
+        // Gọi API và đợi kết quả
+        const countTotalTasks = groupTasks.reduce((total, group) => {
+          const numOfTasks = group.tasks.length;
+          return total + numOfTasks;
+        }, 0);
+        const data: Task = {
+          id: countTotalTasks + 1,
+          name: taskName,
+          taskGroupId: Number(Array.from(category)[0]),
+          earlyStart: earlyStart,
+          earlyFinish: earlyFinish,
+          lateStart: lateStart,
+          lateFinish: lateFinish,
+          startDate: startDate,
+          actualStartDate: startDate,
+          dueDate: endDate,
+          order: countTotalTasks + 1,
+          status: 'Not Started',
+          projectId: 1,
+          completionDate: endDate,
+          progress: Number(progress),
+          description,
+          assignees,
+          files,
+          comments
+        };
+        const result = addTask(groupTasks, data);
+        setGroupTasks(result);
+        if (true) {
+          handleClose();
+          if (onCreated) {
+            onCreated();
+          }
+        }
+      } catch (error: any) {
+        console.error('🚫 ~ onSubmit ~ Error:', error);
+        toast.error(
+          error.response?.data?.message ||
+            'Failed to create task. Please try again.'
+        );
+      } finally {
+        setIsSubmitting(false); // Hoàn tất gửi yêu cầu
       }
-
-      const parseDate = (dateString: any) => {
-        const date = new Date(dateString);
-        return isNaN(date.getTime()) ? null : date;
-      };
-
-      const earlyStartDate = parseDate(task.earlyStart);
-      const lateStartDate = parseDate(task.lateStart);
-      const earlyFinishDate = parseDate(task.earlyFinish);
-      const lateFinishDate = parseDate(task.lateFinish);
-      const startDate = parseDate(task.startDate);
-      const completionDate = parseDate(task.completionDate);
-
-      if (earlyStartDate)
-        setEarlyStart(earlyStartDate.toISOString().split('T')[0]);
-      if (earlyFinishDate)
-        setEarlyFinish(earlyFinishDate.toISOString().split('T')[0]);
-      if (lateStartDate)
-        setLateStart(lateStartDate.toISOString().split('T')[0]);
-      if (lateFinishDate)
-        setLateFinish(lateFinishDate.toISOString().split('T')[0]);
-      if (startDate) setStartDate(startDate.toISOString().split('T')[0]);
-      if (completionDate)
-        setEndDate(completionDate.toISOString().split('T')[0]);
-
-      if (completionDate && startDate) {
-        const differenceInMs = completionDate.getTime() - startDate.getTime();
-        const completeTime = Math.ceil(differenceInMs / (1000 * 60 * 60 * 24));
-        setCompleteTime(completeTime.toString());
-      }
-
-      setProgress(task.progress.toString());
-      setDescription(task.description);
-      setAssignees(task.assignees);
+    } else {
+      console.log('Form has errors. Fix them to proceed.');
     }
-  }, [task]);
+  };
+
+  const handleClose = () => {
+    setTaskName('');
+    setErrors({
+      taskName: ''
+    });
+    // Đóng modal
+    onClose();
+  };
 
   return (
     <Modal
@@ -192,14 +259,14 @@ const ViewTaskModal = ({ isOpen, onOpen, onOpenChange, taskId }: Props) => {
               <span className="text-4xl font-semibold">Task Information</span>
               <XMarkIcon
                 className="size-10 hover:cursor-pointer"
-                onClick={onClose}
+                onClick={handleClose}
               />
             </ModalHeader>
             <ModalBody>
               <div className="flex flex-col gap-6">
                 <div className="flex flex-row gap-10">
                   {/* Project Name */}
-                  <div className="flex w-full shrink basis-[70%] flex-col gap-2">
+                  <div className="relative flex w-full shrink basis-[70%] flex-col gap-2">
                     <span className="text-2xl font-semibold text-on-primary">
                       Task Name
                     </span>
@@ -207,28 +274,32 @@ const ViewTaskModal = ({ isOpen, onOpen, onOpenChange, taskId }: Props) => {
                       type="text"
                       className="h-12 w-full rounded-2xl border border-outline/50 p-5 text-base sm:h-12 sm:text-xl"
                       value={taskName}
+                      placeholder="Enter task name..."
                       onChange={(e) => setTaskName(e.target.value)}
                     />
+                    {renderError('taskName')}
                   </div>
                   {/* Category */}
                   <div className="flex w-full shrink basis-[30%] flex-col gap-2">
                     <span className="text-2xl font-semibold text-on-primary">
                       Category
                     </span>
-                    <Select
-                      variant="bordered"
-                      placeholder={selectedCategory}
-                      selectedKeys={category}
-                      className="bg-b-primary w-96"
-                      onSelectionChange={setCategory}
-                      size="lg"
-                    >
-                      {categories.map((category) => (
-                        <SelectItem key={category.id}>
-                          {category.name}
-                        </SelectItem>
-                      ))}
-                    </Select>
+                    {categories.length > 0 && (
+                      <Select
+                        variant="bordered"
+                        placeholder={'Select category'}
+                        selectedKeys={category}
+                        className="bg-b-primary w-96"
+                        onSelectionChange={setCategory}
+                        size="lg"
+                      >
+                        {categories.map((category) => (
+                          <SelectItem key={category.id}>
+                            {category.name}
+                          </SelectItem>
+                        ))}
+                      </Select>
+                    )}
                   </div>
                 </div>
                 <div className="flex flex-row justify-between gap-4">
@@ -345,6 +416,7 @@ const ViewTaskModal = ({ isOpen, onOpen, onOpenChange, taskId }: Props) => {
                     <Textarea
                       variant="bordered"
                       className="w-full rounded-2xl text-base"
+                      placeholder="Enter task description..."
                       value={description}
                       onValueChange={setDescription}
                     />
@@ -496,8 +568,7 @@ const ViewTaskModal = ({ isOpen, onOpen, onOpenChange, taskId }: Props) => {
               <Button
                 className="bg-main-blue p-5 text-xl text-white shadow-lg"
                 onPress={() => {
-                  handleSave();
-                  onClose();
+                  handleSubmit();
                 }}
               >
                 Save
@@ -521,4 +592,4 @@ const ViewTaskModal = ({ isOpen, onOpen, onOpenChange, taskId }: Props) => {
   );
 };
 
-export default ViewTaskModal;
+export default AddTaskModal;

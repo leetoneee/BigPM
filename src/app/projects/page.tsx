@@ -432,9 +432,9 @@ const Projects = () => {
                 onChange={setFilterEndDate}
               />
             </div>
-            <div className="h-full place-content-end">
+            <div className="h-full place-content-center">
               <Button
-                className="mb-auto h-14 rounded-2xl bg-main-blue text-white shadow-md"
+                className="h-14 rounded-2xl bg-main-blue text-white shadow-md"
                 startContent={
                   <MagnifyingGlassIcon className="size-6 text-white" />
                 }

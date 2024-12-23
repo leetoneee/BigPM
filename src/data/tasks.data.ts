@@ -15,6 +15,8 @@ export const tasks: Task[] = [
     earlyFinish: '2023-01-14T23:59:59Z',
     lateFinish: '2023-01-15T23:59:59Z',
     completionDate: '2023-01-14T00:00:00Z',
+    comments: [],
+    files: [],
     status: 'Completed',
     progress: 100,
     order: 1,
@@ -48,6 +50,8 @@ export const tasks: Task[] = [
     status: 'Completed',
     progress: 100,
     order: 2,
+    comments: [],
+    files: [],
     assignees: [
       {
         id: 3,
@@ -78,6 +82,8 @@ export const tasks: Task[] = [
     status: 'In Progress',
     progress: 60,
     order: 1,
+    comments: [],
+    files: [],
     assignees: [
       {
         id: 5,
@@ -102,6 +108,8 @@ export const tasks: Task[] = [
     completionDate: null,
     status: 'In Progress',
     progress: 45,
+    comments: [],
+    files: [],
     order: 2,
     assignees: [
       {
@@ -132,6 +140,8 @@ export const tasks: Task[] = [
     completionDate: null,
     status: 'Not Started',
     progress: 0,
+    comments: [],
+    files: [],
     order: 1,
     assignees: [
       {

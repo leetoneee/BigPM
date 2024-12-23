@@ -14,4 +14,5 @@ export type Assignee = {
     | 'Product Owner';
   email: string;
   inProgressProjects: number; // Number of in-progress projects assigned
+  avatar: string; // URL to the avatar image
 };

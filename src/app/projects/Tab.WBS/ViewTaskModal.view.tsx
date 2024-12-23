@@ -36,12 +36,14 @@ import {
   Selection,
   SelectItem,
   Textarea,
-  Tooltip
+  Tooltip,
+  useDisclosure
 } from '@nextui-org/react';
 import React, { useContext, useEffect, useState } from 'react';
 import { AppContext } from '@/contexts';
 import { getCategoryList } from '@/helpers/getCategoryList';
 import { findTaskInGroupTasks } from '@/helpers/findTaskInGroupTasks';
+import TaskAssigneeModal from './task-assignee';
 
 type Props = {
   isOpen: boolean;
@@ -55,10 +57,21 @@ type GroupTasksType = {
   setGroupTasks: React.Dispatch<React.SetStateAction<TasksInGroup[]>>;
 };
 
+export type ChipAvatar = {
+  id: number;
+  assigneeName: string;
+  asigneeAvatar: string;
+};
+
 const ViewTaskModal = ({ isOpen, onOpen, onOpenChange, taskId }: Props) => {
   const { groupTasks, setGroupTasks } = useContext(
     AppContext
   ) as GroupTasksType;
+  const {
+    isOpen: isOpenT,
+    onOpen: onOpenT,
+    onOpenChange: onOpenChangeT
+  } = useDisclosure();
 
   const handleSave = () => {};
   const handleClose = () => {};
@@ -88,13 +101,7 @@ const ViewTaskModal = ({ isOpen, onOpen, onOpenChange, taskId }: Props) => {
     () => Array.from(category).join(', ').replaceAll('_', ' '),
     [category]
   );
-  const [assignees, setAssignees] = useState<
-    {
-      id: number;
-      assigneeName: string;
-      asigneeAvatar: string;
-    }[]
-  >([]);
+  const [assignees, setAssignees] = useState<ChipAvatar[]>([]);
   const [files, setFiles] = useState<File[]>([]);
   const [comments, setComments] = useState<Comment[]>([]);
   const [commentInput, setCommentInput] = useState<string>('');
@@ -381,7 +388,10 @@ const ViewTaskModal = ({ isOpen, onOpen, onOpenChange, taskId }: Props) => {
                           </div>
                         );
                       })}
-                      <button className="rounded-[10px] bg-main-blue p-1 text-white hover:brightness-110">
+                      <button
+                        className="rounded-[10px] bg-main-blue p-1 text-white hover:brightness-110"
+                        onClick={onOpenT}
+                      >
                         <PlusIcon className="size-7 text-white shadow-md" />
                       </button>
                     </div>
@@ -490,6 +500,13 @@ const ViewTaskModal = ({ isOpen, onOpen, onOpenChange, taskId }: Props) => {
                     ))}
                   </div>
                 </div>
+                <TaskAssigneeModal
+                  isOpen={isOpenT}
+                  onOpen={onOpenT}
+                  onOpenChange={onOpenChangeT}
+                  teamMembers={assignees}
+                  setTeamMembers={setAssignees}
+                />
               </div>
             </ModalBody>
             <ModalFooter>

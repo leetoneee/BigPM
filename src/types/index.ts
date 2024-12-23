@@ -24,3 +24,9 @@ export type TabButtonProps = {
   setActiveTab: (tabName: string) => void;
   activeTab: string;
 };
+
+export type Crumb = {
+  label: string;
+  href: string;
+  className?: string;
+};

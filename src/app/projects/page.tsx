@@ -44,9 +44,16 @@ import {
   Selection
 } from '@nextui-org/react';
 import { DatePicker } from '@nextui-org/date-picker';
+import { Crumb } from '@/types';
 
 const Projects = () => {
   const router = useRouter();
+  const crumbs: Crumb[] = [
+    {
+      label: 'Projects',
+      href: '/projects'
+    }
+  ];
 
   const [projects, setProjects] = useState<Project[]>([]);
   const [notStartedProjects, setNotStartedProjects] = useState<number>(0);
@@ -311,7 +318,7 @@ const Projects = () => {
 
   return (
     <main className="flex h-full flex-col items-center p-3 sm:items-start">
-      <Breadcrumb />
+      <Breadcrumb crumbs={crumbs} />
       <div className="mb-3 h-2 w-full border-b pt-2"></div>
       <div className="flex h-full w-full flex-col gap-6 rounded-xl bg-[#FFFFFF] p-6">
         {/* Thống kê và search */}
@@ -450,7 +457,7 @@ const Projects = () => {
             aria-label="Example table with client side pagination"
             className="h-full w-full"
             selectionMode="single"
-            color="#F7F9FD"
+            // color="#F7F9FD"
             shadow="none"
             // bottomContent={
             //   <div className="mb-auto flex w-full justify-center">
@@ -496,7 +503,7 @@ const Projects = () => {
             isCompact
             showControls
             showShadow
-            color="#00AAFF"
+            color="primary"
             page={page}
             total={pages}
             onChange={(page) => setPage(page)}

@@ -48,11 +48,22 @@ import React from 'react';
 import { useRouter } from 'next/navigation';
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import ProjectAssigneeModal from './project-assignee';
+import { Crumb } from '@/types';
 
 export default function Settings() {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   const router = useRouter();
+  const crumbs: Crumb[] = [
+    {
+      label: 'Projects',
+      href: '/projects'
+    },
+    {
+      label: 'Create',
+      href: '/projects/create'
+    }
+  ];
 
   const [projectName, setProjectName] = useState<string>('');
   const [startDate, setStartDate] = useState<CalendarDate>();
@@ -96,13 +107,11 @@ export default function Settings() {
   // Load data
   useEffect(() => {
     setFiles(filesData);
-    return () => {};
   }, [filesData]);
 
-  useEffect(() => {
-    setTeamMembers(teamMembersData);
-    return () => {};
-  }, [teamMembersData]);
+  // useEffect(() => {
+  //   setTeamMembers(teamMembersData);
+  // }, [teamMembersData]);
 
   useEffect(() => {
     const data = [{ id: 0, name: 'All' }, ...rolesData];
@@ -307,7 +316,7 @@ export default function Settings() {
 
   return (
     <main className="flex h-full flex-col items-center p-3 sm:items-start">
-      <Breadcrumb />
+      <Breadcrumb crumbs={crumbs} />
       <div className="mb-3 h-2 w-full border-b pt-2"></div>
       <div className="flex min-h-max w-full flex-col gap-4 rounded-xl bg-[#FFFFFF] p-6">
         {/* Project Name | Start Date | End Date */}

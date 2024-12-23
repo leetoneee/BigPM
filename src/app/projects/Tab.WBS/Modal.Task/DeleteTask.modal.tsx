@@ -55,10 +55,6 @@ export default function DeleteTaskModal({
     }
   }, [taskId, taskTitle]);
 
-  const deleteTask = async (taskId: number) => {
-    console.log('🚀 ~ groupTasks:', groupTasks);
-  };
-
   const handleDelete = async () => {
     setIsDeleting(true);
     try {

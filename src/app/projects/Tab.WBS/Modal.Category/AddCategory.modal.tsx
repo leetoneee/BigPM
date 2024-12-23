@@ -33,18 +33,13 @@ const courseTypes = [
   { key: 'toefl', label: 'TOEFL' }
 ];
 
-export default function AddCourseModal({
+export default function AddCategoryModal({
   isOpen,
   onOpen,
   onOpenChange,
   onClose,
   onCreated
 }: Props) {
-  // const [urls, setUrls] = useState<{
-  //   url: string;
-  //   thumbnailUrl: string | null;
-  // }>();
-
   const [name, setName] = useState<string>('');
   const [code, setCode] = useState<string>('');
   const [timePerLesson, setTimePerLesson] = useState<string>('');

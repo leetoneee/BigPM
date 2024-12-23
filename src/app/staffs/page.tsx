@@ -17,6 +17,7 @@ import React, { ReactNode } from 'react';
 
 import { Breadcrumbs, BreadcrumbItem } from '@nextui-org/react';
 import { Breadcrumb } from '@/components';
+import { Crumb } from '@/types';
 
 export default function Staffs() {
   const router = useRouter();
@@ -82,7 +83,12 @@ export default function Staffs() {
   //   },
   //   []
   // );
-
+  const crumbs: Crumb[] = [
+    {
+      label: 'Staffs',
+      href: '/staffs'
+    }
+  ];
   return (
     <main className="flex flex-col items-center p-3 sm:items-start">
       {/* <Breadcrumbs underline="active" onAction={(key) => setCurrentPage(key)}>
@@ -94,7 +100,7 @@ export default function Staffs() {
           Staffs
         </BreadcrumbItem>
       </Breadcrumbs> */}
-      <Breadcrumb />
+      <Breadcrumb crumbs={crumbs}/>
       <div className="mb-2 h-10 w-full border-b pt-2"></div>
       {/* <Table aria-label="Example table with custom cells">
         <TableHeader columns={columns}>

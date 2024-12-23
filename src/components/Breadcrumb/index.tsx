@@ -1,65 +1,51 @@
-'use client';
-
-import React from 'react';
-import { usePathname } from 'next/navigation';
+import { classNames } from '@/components/classNames';
+import { Crumb } from '@/types';
+import { ChevronRightIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
-import { SlashIcon } from '@heroicons/react/24/outline';
+import React from 'react';
 
-const Breadcrumb = () => {
-  const pathname = usePathname();
+type Props = {
+  crumbs: Crumb[];
+};
 
-  // Get path segments and filter out empty strings
-  const pathSegments = pathname.split('/').filter((segment) => segment);
-  console.log('🚀 ~ Breadcrumb ~ pathSegments:', pathSegments);
-
-  // Capitalize first letter of each segment for display
-  const formatSegment = (segment: string) =>
-    segment.charAt(0).toUpperCase() + segment.slice(1);
-
+const Breadcrumb = ({ crumbs }: Props) => {
   return (
-    <div className="mb-3 w-full">
-      <div className="shadow-1 dark:shadow-card bg-tg-bg dark:bg-dark-2 rounded-lg">
-        <ul className="flex items-center">
-          {/* Dashboard link */}
-          {pathSegments.length === 0 && (
-            <li className="flex items-center">
-              <Link
-                href="/"
-                className="font-bold text-on-secondary hover:text-on-secondary/70"
-              >
-                Dashboard
-              </Link>
+    <nav>
+      <ol className="flex">
+        {crumbs.map((crumb, index) => {
+          const isLast = index === crumbs.length - 1;
 
-              {/* <ChevronRightIcon className="size-5" /> */}
-            </li>
-          )}
-
-          {/* Dynamic path segments */}
-          {pathSegments.map((segment, index) => {
-            const href = `/${pathSegments.slice(0, index + 1).join('/')}`;
-            const isLast = index === pathSegments.length - 1;
-
-            return (
-              <li key={href} className="flex items-center">
-                {!isLast ? (
-                  <Link
-                    href={href}
-                    className="text-xl font-bold text-on-secondary hover:text-on-secondary/70"
+          return (
+            <li key={crumb.href} className="flex flex-row">
+              {!isLast ? (
+                <Link href={crumb.href}>
+                  <span
+                    className={classNames(
+                      'w-72 truncate text-2xl font-bold text-on-primary hover:underline',
+                      crumb.className ? crumb.className : ''
+                    )}
                   >
-                    {formatSegment(segment)}
-                  </Link>
-                ) : (
-                  <span className="text-xl font-bold text-on-secondary">
-                    {formatSegment(segment)}
+                    {crumb.label}
                   </span>
-                )}
-                {!isLast && <SlashIcon className="size-5" />}
-              </li>
-            );
-          })}
-        </ul>
-      </div>
-    </div>
+                </Link>
+              ) : (
+                <span
+                  className={classNames(
+                    'w-72 truncate text-2xl font-bold text-on-primary',
+                    crumb.className ? crumb.className : ''
+                  )}
+                >
+                  {crumb.label}
+                </span>
+              )}
+              {index < crumbs.length - 1 && (
+                <ChevronRightIcon className="my-auto inline size-7 text-on-primary" />
+              )}
+            </li>
+          );
+        })}
+      </ol>
+    </nav>
   );
 };
 

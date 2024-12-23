@@ -181,7 +181,7 @@ const WBS = ({ id, setIsModalNewTaskOpen }: Props) => {
         {/* Time/Progress */}
         <div className="flex w-full flex-row gap-5">
           {/* Thống kê */}
-          <div className="flex w-full flex-col gap-2 rounded-xl bg-[#F7F9FD] p-5 shadow-xl">
+          <div className="flex w-full basis-[60%] flex-col gap-2 rounded-xl bg-[#F7F9FD] p-5 shadow-xl">
             <span className="text-2xl font-semibold text-on-primary">Time</span>
             <div className="flex w-full flex-row gap-10">
               <Chip
@@ -206,7 +206,7 @@ const WBS = ({ id, setIsModalNewTaskOpen }: Props) => {
             </div>
           </div>
           {/* Thống kê */}
-          <div className="flex w-full flex-col gap-2 rounded-xl bg-[#F7F9FD] p-5 shadow-xl">
+          <div className="flex w-full basis-[40%] flex-col gap-2 rounded-xl bg-[#F7F9FD] p-5 shadow-xl">
             <span className="text-2xl font-semibold text-on-primary">
               Progress
             </span>

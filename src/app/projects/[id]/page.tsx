@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Breadcrumb } from '@/components';
 import Image from 'next/image';
 import ProjectHeader from '../ProjectHeader';
@@ -11,13 +11,14 @@ import Gantt from '../Tab.Gantt';
 import Kanban from '../Tab.Kanban';
 import Progress from '../Tab.Progress';
 import { useParams } from 'next/navigation';
+import { Crumb } from '@/types';
 
 type Props = {
   params: { id: string };
 };
 
 export default function Projects() {
-  const params = useParams<{ id: string }>()
+  const params = useParams<{ id: string }>();
 
   const { id } = params;
 
@@ -32,7 +33,7 @@ export default function Projects() {
         onClose={() => setIsModalNewTaskOpen(false)}
         id={id}
       /> */}
-        <ProjectHeader activeTab={activeTab} setActiveTab={setActiveTab} />
+        <ProjectHeader activeTab={activeTab} setActiveTab={setActiveTab} projectId={id} />
         {activeTab === 'Overview' && (
           <Overview id={id} setIsModalNewTaskOpen={setIsModalNewTaskOpen} />
         )}

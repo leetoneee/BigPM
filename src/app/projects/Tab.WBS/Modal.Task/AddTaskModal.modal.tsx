@@ -35,13 +35,16 @@ import {
   Selection,
   SelectItem,
   Textarea,
-  Tooltip
+  Tooltip,
+  useDisclosure
 } from '@nextui-org/react';
 import React, { useContext, useEffect, useState } from 'react';
 import { AppContext } from '@/contexts';
 import { toast } from 'react-toastify';
 import { getCategoryList } from '@/helpers/getCategoryList';
 import { addTask } from '@/helpers/addTask';
+import TaskAssigneeModal from '../task-assignee';
+import { ChipAvatar } from '../ViewTaskModal.view';
 
 type Props = {
   isOpen: boolean;
@@ -66,6 +69,11 @@ const AddTaskModal = ({
   const { groupTasks, setGroupTasks } = useContext(
     AppContext
   ) as GroupTasksType;
+  const {
+    isOpen: isOpenT,
+    onOpen: onOpenT,
+    onOpenChange: onOpenChangeT
+  } = useDisclosure();
 
   const [categories, setCategories] = useState<TaskGroup[]>([]);
 
@@ -94,13 +102,7 @@ const AddTaskModal = ({
     [category]
   );
 
-  const [assignees, setAssignees] = useState<
-    {
-      id: number;
-      assigneeName: string;
-      asigneeAvatar: string;
-    }[]
-  >([]);
+  const [assignees, setAssignees] = useState<ChipAvatar[]>([]);
   const [files, setFiles] = useState<File[]>([]);
   const [comments, setComments] = useState<Comment[]>([]);
   const [commentInput, setCommentInput] = useState<string>('');
@@ -562,6 +564,13 @@ const AddTaskModal = ({
                     ))}
                   </div>
                 </div>
+                <TaskAssigneeModal
+                  isOpen={isOpenT}
+                  onOpen={onOpenT}
+                  onOpenChange={onOpenChangeT}
+                  teamMembers={assignees}
+                  setTeamMembers={setAssignees}
+                />
               </div>
             </ModalBody>
             <ModalFooter>

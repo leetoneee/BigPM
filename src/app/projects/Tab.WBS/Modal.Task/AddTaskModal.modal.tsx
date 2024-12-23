@@ -455,7 +455,10 @@ const AddTaskModal = ({
                           </div>
                         );
                       })}
-                      <button className="rounded-[10px] bg-main-blue p-1 text-white hover:brightness-110">
+                      <button
+                        className="rounded-[10px] bg-main-blue p-1 text-white hover:brightness-110"
+                        onClick={onOpenT}
+                      >
                         <PlusIcon className="size-7 text-white shadow-md" />
                       </button>
                     </div>

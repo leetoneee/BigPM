@@ -4,7 +4,9 @@ import {
   ChevronDownIcon,
   ChevronUpIcon,
   EllipsisVerticalIcon,
-  FolderIcon
+  EyeIcon,
+  FolderIcon,
+  TrashIcon
 } from '@heroicons/react/24/outline';
 import { PanInfo, Reorder } from 'framer-motion';
 import { data } from 'framer-motion/client';
@@ -17,6 +19,15 @@ import React, {
   useState
 } from 'react';
 import RenderTask from './RenderTask';
+import {
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
+  useDisclosure
+} from '@nextui-org/react';
+import { toast } from 'react-toastify';
+import DeleteCategoryModal from './Modal.Category/DeleteCategory.modal';
 
 type Props = {
   data: TasksInGroup;
@@ -32,6 +43,13 @@ const RenderGroupTasks = ({ data, groups, groupRefs, onTaskMove }: Props) => {
   const [tasks, setTasks] = useState<Task[]>(data.tasks);
   const [expanded, setExpanded] = useState(true);
   const contentRef = useRef<HTMLDivElement>(null);
+  //!  CONTROL Delete modal
+  const {
+    isOpen: isOpenD,
+    onOpen: onOpenD,
+    onOpenChange: onOpenChangeD,
+    onClose: onCloseD
+  } = useDisclosure();
 
   useEffect(() => {
     console.log('Data changed:', data);
@@ -65,6 +83,10 @@ const RenderGroupTasks = ({ data, groups, groupRefs, onTaskMove }: Props) => {
     }
   };
 
+  const handleDeleted = () => {
+    toast.success('Category deleted successfully');
+  };
+
   return (
     <div
       ref={(el) => {
@@ -77,7 +99,7 @@ const RenderGroupTasks = ({ data, groups, groupRefs, onTaskMove }: Props) => {
         onClick={handleShowOrHideTasks}
       >
         <div className="flex basis-[40%] flex-row items-center justify-between py-4">
-          <div className="flex flex-row truncate text-ellipsis whitespace-nowrap text-left pl-4 text-xl font-normal text-on-secondary">
+          <div className="flex flex-row truncate text-ellipsis whitespace-nowrap pl-4 text-left text-xl font-normal text-on-secondary">
             {expanded ? (
               <div className="mr-[18px] rounded-full">
                 <ChevronUpIcon className="size-6" />
@@ -90,7 +112,30 @@ const RenderGroupTasks = ({ data, groups, groupRefs, onTaskMove }: Props) => {
             {group.name.toUpperCase()}
           </div>
           <div className="h-[72px] place-content-center">
-            <EllipsisVerticalIcon className="m-2 size-6" />
+            <Dropdown>
+              <DropdownTrigger>
+                <EllipsisVerticalIcon className="m-2 size-6 rounded-md hover:cursor-pointer hover:bg-on-container-focus/10 hover:brightness-110" />
+              </DropdownTrigger>
+              <DropdownMenu
+                variant="solid"
+                aria-label="Dropdown menu with icons"
+              >
+                <DropdownItem
+                  key="new"
+                  startContent={<EyeIcon className={'size-6 text-primary'} />}
+                  // onClick={onOpen}
+                >
+                  View
+                </DropdownItem>
+                <DropdownItem
+                  key="copy"
+                  startContent={<TrashIcon className={'size-6 text-danger'} />}
+                  onClick={onOpenD}
+                >
+                  Delete
+                </DropdownItem>
+              </DropdownMenu>
+            </Dropdown>{' '}
           </div>
         </div>
         <div className="basis-[60%] items-center truncate text-ellipsis whitespace-nowrap px-14 py-4 text-left font-bold"></div>
@@ -98,16 +143,12 @@ const RenderGroupTasks = ({ data, groups, groupRefs, onTaskMove }: Props) => {
 
       <div
         ref={contentRef}
-        className={`overflow-hidden transition-all duration-300 ease-in-out ${tasks.length > 0 ? "" : expanded ? "min-h-20": "min-h-0"}`}
+        className={`overflow-hidden transition-all duration-300 ease-in-out ${tasks.length > 0 ? '' : expanded ? 'min-h-20' : 'min-h-0'}`}
         style={{
           maxHeight: expanded ? `${contentRef.current?.scrollHeight}px` : '0px'
         }}
       >
-        <Reorder.Group
-          axis="y"
-          values={tasks}
-          onReorder={setTasks}
-        >
+        <Reorder.Group axis="y" values={tasks} onReorder={setTasks}>
           {tasks.map((task) => (
             <Reorder.Item
               key={task.id}
@@ -121,6 +162,17 @@ const RenderGroupTasks = ({ data, groups, groupRefs, onTaskMove }: Props) => {
           ))}
         </Reorder.Group>
       </div>
+      {isOpenD && group && (
+        <DeleteCategoryModal
+          isOpen={isOpenD}
+          onOpen={onOpenD}
+          onClose={onCloseD}
+          onOpenChange={onOpenChangeD}
+          categoryId={group.id}
+          categoryName={group.name}
+          onDeleted={handleDeleted}
+        />
+      )}
     </div>
   );
 };
